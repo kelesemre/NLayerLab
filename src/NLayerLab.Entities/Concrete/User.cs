@@ -10,7 +10,7 @@ namespace NLayerLab.Entities.Concrete
     public class User : EntityBase, IEntity
     {
         public string FirstName { get; set; }
-        public string Lastname { get; set; }
+        public string LastName { get; set; }
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public string Username { get; set; }
@@ -19,6 +19,6 @@ namespace NLayerLab.Entities.Concrete
 
         public int RoleId { get; set; }
         public Role Role { get; set; }
-        ICollection<Article> Articles { get; set; }
+        public ICollection<Article> Articles { get; set; }
     }
 }
