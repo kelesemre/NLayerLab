@@ -17,6 +17,7 @@ namespace NLayerLab.Data.Concrete.EntityFramework.Mappings
             builder.Property(u => u.Id).ValueGeneratedOnAdd();
             builder.Property(u => u.Email).IsRequired();
             builder.Property(u => u.Email).HasMaxLength(50);
+            //builder.Property(u => u.Email).HasColumnName("OTHER_NAME");
             builder.HasIndex(u => u.Email).IsUnique();
             builder.Property(u => u.Username).IsRequired();
             builder.Property(u => u.Username).HasMaxLength(20);
@@ -41,6 +42,25 @@ namespace NLayerLab.Data.Concrete.EntityFramework.Mappings
             builder.Property(u => u.IsDeleted).IsRequired();
             builder.Property(u => u.Note).HasMaxLength(500);
             builder.ToTable("Users");
+            builder.HasData(new User
+            {
+                Id = 1,
+                RoleId = 1,
+                FirstName = "Emre",
+                LastName = "Keles",
+                Username = "emrekeless",
+                Email = "emrekeless@gmail.com",
+                IsActive = true,
+                IsDeleted = false,
+                CreatedByName = "InitialCreate",
+                CreatedDate = DateTime.Now,
+                ModifiedByName = "InitialCreate",
+                ModifiedDate = DateTime.Now,
+                Description = "İlk Admin Kullanici",
+                Note = "Admin Kullanicisi",
+                PasswordHash = Encoding.ASCII.GetBytes("0192023a7bbd73250516f069df18b500"),
+                Picture="https//emre"
+            });;
         }
     }
 }
