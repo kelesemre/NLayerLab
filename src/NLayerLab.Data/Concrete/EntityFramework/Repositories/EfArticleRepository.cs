@@ -13,7 +13,7 @@ namespace NLayerLab.Data.Concrete.EntityFramework.Repositories
 {
     public class EfArticleRepository : EfEntityRepositoryBase<Article>, IArticleRepository
     {
-        public EfArticleRepository(DbContext dbContext) : base(dbContext)
+        public EfArticleRepository(DbContext dbContext) : base(dbContext) // added for dbcontext
         {
         }
     }

@@ -4,4 +4,14 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\NLayerLab.Data\NLayerLab.Data.csproj" />
+    <ProjectReference Include="..\NLayerLab.Entities\NLayerLab.Entities.csproj" />
+    <ProjectReference Include="..\NLayerLab.Shared\NLayerLab.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -24,7 +24,7 @@ namespace NLayerLab.Shared.Data.Concrete.EntityFramework
             await _dbContext.Set<TEntity>().AddAsync(entity);
         }
 
-        public async Task<bool> AnyAsyc(Expression<Func<TEntity, bool>> predicate)
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await _dbContext.Set<TEntity>().AnyAsync(predicate);
         }
@@ -45,13 +45,13 @@ namespace NLayerLab.Shared.Data.Concrete.EntityFramework
             IQueryable<TEntity> query = _dbContext.Set<TEntity>();
             if (predicate != null)
             {
-                query = query.Where(predicate); 
+                query = query.Where(predicate); // first param is filter
             }
             if (includeProperties.Any())
             {
                 foreach (var includeProperty in includeProperties)
                 {
-                    query = query.Include(includeProperty); 
+                    query = query.Include(includeProperty);  // second param is for including.
                 }
             }
             return await query.ToListAsync();
