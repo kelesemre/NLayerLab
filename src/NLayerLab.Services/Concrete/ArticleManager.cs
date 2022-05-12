@@ -1,4 +1,6 @@
-﻿using NLayerLab.Data.Abstract;
+﻿using AutoMapper;
+using NLayerLab.Data.Abstract;
+using NLayerLab.Entities.Concrete;
 using NLayerLab.Entities.Dtos;
 using NLayerLab.Services.Abstract;
 using NLayerLab.Shared.Utilities.Results.Abstract;
@@ -15,19 +17,36 @@ namespace NLayerLab.Services.Concrete
     public class ArticleManager : IArticleService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public ArticleManager(IUnitOfWork unitOfWork)
+        private readonly IMapper _mapper;
+        public ArticleManager(IUnitOfWork unitOfWork,IMapper mapper)
         {
+            _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
 
         public async Task<IResult> Add(ArticleAddDto articleAddDto, string createdByName)
         {
-            throw new NotImplementedException();
+            var article = _mapper.Map<Article>(articleAddDto);
+            article.CreatedByName = createdByName;
+            article.ModifiedByName = createdByName;
+            article.UserId = 1;
+            await _unitOfWork.Articles.AddAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+            return new Result(ResultStatus.Success, $"{articleAddDto.Title} has been added.");
         }
 
         public async Task<IResult> Delete(int articleId, string modifiedByName)
         {
-            throw new NotImplementedException();
+            var result = await _unitOfWork.Articles.AnyAsync(a => a.Id == articleId);
+            if (result)
+            {
+                var article = await _unitOfWork.Articles.GetAsync(a => a.Id == articleId);
+                article.IsDeleted = true;
+                article.ModifiedByName = modifiedByName;
+                article.ModifiedDate = DateTime.Now;
+                await _unitOfWork.Articles.UpdateAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+                return new Result(ResultStatus.Success, $"{article.Title} has been delete");
+            }
+            return new Result(ResultStatus.Error, "There is no such a article");
         }
 
         public async Task<IDataResult<ArticleDto>> Get(int articleId)
@@ -110,12 +129,22 @@ namespace NLayerLab.Services.Concrete
 
         public async Task<IResult> HardDelete(int articleId)
         {
-            throw new NotImplementedException();
+            var result = await _unitOfWork.Articles.AnyAsync(a => a.Id == articleId);
+            if (result)
+            {
+                var article = await _unitOfWork.Articles.GetAsync(a => a.Id == articleId);
+                await _unitOfWork.Articles.DeleteAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+                return new Result(ResultStatus.Success, $"{article.Title} has been deleted.");
+            }
+            return new Result(ResultStatus.Error, "there is no such a article");
         }
 
         public async Task<IResult> Update(ArticleUpdateDto articleUpdateDto, string modifiedByName)
         {
-            throw new NotImplementedException();
+            var article = _mapper.Map<Article>(articleUpdateDto);
+            article.ModifiedByName = modifiedByName;
+            await _unitOfWork.Articles.UpdateAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+            return new Result(ResultStatus.Success, $"{articleUpdateDto.Title} has been updated.");
         }
     }
 }
