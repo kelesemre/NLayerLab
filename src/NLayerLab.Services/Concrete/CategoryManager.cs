@@ -86,9 +86,8 @@ namespace NLayerLab.Services.Concrete
             var category = _mapper.Map<Category>(categoryAddDto);
             category.CreatedByName = createdByName;
             category.ModifiedByName = createdByName;
-            await _unitOfWork.Categories.AddAsync(category)
-                .ContinueWith(t => _unitOfWork.SaveAsync());
-            //await _unitOfWork.SaveAsync();
+            await _unitOfWork.Categories.AddAsync(category);
+            await _unitOfWork.SaveAsync();
             return new Result(ResultStatus.Success, $"{categoryAddDto.Name} has been added.");
         }
 
@@ -96,7 +95,8 @@ namespace NLayerLab.Services.Concrete
         {
             var category = _mapper.Map<Category>(categoryUpdateDto);
             category.ModifiedByName = modifiedByName;
-            await _unitOfWork.Categories.UpdateAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+            await _unitOfWork.Categories.UpdateAsync(category);
+            await _unitOfWork.SaveAsync();
             return new Result(ResultStatus.Success, $"{categoryUpdateDto.Name} has been updated.");
         }
 
@@ -108,7 +108,8 @@ namespace NLayerLab.Services.Concrete
                 category.IsDeleted = true;
                 category.ModifiedByName = modifiedByName;
                 category.ModifiedDate = DateTime.Now;
-                await _unitOfWork.Categories.UpdateAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+                await _unitOfWork.Categories.UpdateAsync(category);
+                await _unitOfWork.SaveAsync();
                 return new Result(ResultStatus.Success, $"{category.Name} has been deleted");
             }
             return new Result(ResultStatus.Error, "There is no such category.");
@@ -119,7 +120,8 @@ namespace NLayerLab.Services.Concrete
             var category = await _unitOfWork.Categories.GetAsync(c => c.Id == categoryId);
             if (category != null)
             {
-                await _unitOfWork.Categories.DeleteAsync(category).ContinueWith(t => _unitOfWork.SaveAsync());
+                await _unitOfWork.Categories.DeleteAsync(category);
+                await _unitOfWork.SaveAsync();
                 return new Result(ResultStatus.Success, $"{category.Name} has been deleted.");
             }
             return new Result(ResultStatus.Error, "There is no such category.");
