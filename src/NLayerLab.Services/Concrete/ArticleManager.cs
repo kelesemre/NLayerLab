@@ -18,7 +18,7 @@ namespace NLayerLab.Services.Concrete
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public ArticleManager(IUnitOfWork unitOfWork,IMapper mapper)
+        public ArticleManager(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
@@ -30,7 +30,8 @@ namespace NLayerLab.Services.Concrete
             article.CreatedByName = createdByName;
             article.ModifiedByName = createdByName;
             article.UserId = 1;
-            await _unitOfWork.Articles.AddAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+            await _unitOfWork.Articles.AddAsync(article);
+            await _unitOfWork.SaveAsync();
             return new Result(ResultStatus.Success, $"{articleAddDto.Title} has been added.");
         }
 
@@ -43,7 +44,8 @@ namespace NLayerLab.Services.Concrete
                 article.IsDeleted = true;
                 article.ModifiedByName = modifiedByName;
                 article.ModifiedDate = DateTime.Now;
-                await _unitOfWork.Articles.UpdateAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+                await _unitOfWork.Articles.UpdateAsync(article);
+                await _unitOfWork.SaveAsync();
                 return new Result(ResultStatus.Success, $"{article.Title} has been delete");
             }
             return new Result(ResultStatus.Error, "There is no such a article");
@@ -73,7 +75,7 @@ namespace NLayerLab.Services.Concrete
                     Articles = articles,
                     ResultStatus = ResultStatus.Success
                 });
-            }  
+            }
             return new DataResult<ArticleListDto>(ResultStatus.Error, "not found such a article.", null);
         }
 
@@ -133,7 +135,8 @@ namespace NLayerLab.Services.Concrete
             if (result)
             {
                 var article = await _unitOfWork.Articles.GetAsync(a => a.Id == articleId);
-                await _unitOfWork.Articles.DeleteAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+                await _unitOfWork.SaveAsync();
+                await _unitOfWork.Articles.DeleteAsync(article);
                 return new Result(ResultStatus.Success, $"{article.Title} has been deleted.");
             }
             return new Result(ResultStatus.Error, "there is no such a article");
@@ -143,7 +146,8 @@ namespace NLayerLab.Services.Concrete
         {
             var article = _mapper.Map<Article>(articleUpdateDto);
             article.ModifiedByName = modifiedByName;
-            await _unitOfWork.Articles.UpdateAsync(article).ContinueWith(t => _unitOfWork.SaveAsync());
+            await _unitOfWork.SaveAsync();
+            await _unitOfWork.Articles.UpdateAsync(article);
             return new Result(ResultStatus.Success, $"{articleUpdateDto.Title} has been updated.");
         }
     }

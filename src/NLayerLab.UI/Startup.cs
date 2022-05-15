@@ -7,7 +7,9 @@ using NLayerLab.Services.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
 using System.Threading.Tasks;
+using NLayerLab.Services.AutoMapper.Profiles;
 
 namespace NLayerLab.UI
 {
@@ -18,6 +20,7 @@ namespace NLayerLab.UI
         public void ConfigureServices(IServiceCollection services)
         {
             services.LoadServices();
+            services.AddAutoMapper(typeof(CategoryProfile), typeof(ArticleProfile));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
